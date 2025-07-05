@@ -10,7 +10,7 @@ import Model.Account;
 import Model.Message;
 import Service.AccountService;
 import Service.MessageService;
-import Service.ServiceException;
+import Service.ExceptionSer;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
@@ -24,33 +24,33 @@ public class SocialMediaController {
     }
     public Javalin startAPI() {
         Javalin app = Javalin.create();
-        app.post("/register", this::registerAccount);
-        app.post("/login", this::loginAccount);
-        app.post("/messages", this::createMessage);
-        app.get("/messages", this::getAllMessages);
-        app.get("/messages/{message_id}", this::getMessageById);
-        app.delete("/messages/{message_id}", this::deleteMessageById);
-        app.patch("/messages/{message_id}", this::updateMessageById);
+        app.post("/register", this::rA);
+        app.post("/login", this::lA);
+        app.post("/messages", this::cM);
+        app.get("/messages", this::gAM);
+        app.get("/messages/{message_id}", this::gMI);
+        app.delete("/messages/{message_id}", this::dMI);
+        app.patch("/messages/{message_id}", this::uMI);
         app.get("/accounts/{account_id}/messages",
-                this::getMessagesByAccountId);
+                this::gMAI);
 
         return app;
 
     }
 
-    private void registerAccount(Context ctx) throws JsonProcessingException {
+    private void rA(Context ctx) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         Account account = mapper.readValue(ctx.body(), Account.class);
         try {
             Account registeredAccount = accountService.createAccount(account);
             ctx.json(mapper.writeValueAsString(registeredAccount));
-        } catch (ServiceException e) {
+        } catch (ExceptionSer e) {
             ctx.status(400);
         }
     }
 
     
-    private void loginAccount(Context ctx) throws JsonProcessingException {
+    private void lA(Context ctx) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper(); 
         Account account = mapper.readValue(ctx.body(), Account.class);
 
@@ -65,13 +65,13 @@ public class SocialMediaController {
             } else {
                 ctx.status(401);
             }
-        } catch (ServiceException e) {
+        } catch (ExceptionSer e) {
             ctx.status(401);
         }
     }
 
     
-    private void createMessage(Context ctx) throws JsonProcessingException {
+    private void cM(Context ctx) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         Message mappedMessage = mapper.readValue(ctx.body(), Message.class);
         try {
@@ -80,18 +80,18 @@ public class SocialMediaController {
             Message message = messageService.createMessage(mappedMessage,
                     account);
             ctx.json(message);
-        } catch (ServiceException e) {
+        } catch (ExceptionSer e) {
             ctx.status(400);
         }
     }
 
-    private void getAllMessages(Context ctx) {
+    private void gAM(Context ctx) {
 
         List<Message> messages = messageService.getAllMessages();
         ctx.json(messages);
     }
 
-    private void getMessageById(Context ctx) {
+    private void gMI(Context ctx) {
         try {
             int id = Integer.parseInt(ctx.pathParam("message_id"));
             Optional<Message> message = messageService.getMessageById(id);
@@ -105,14 +105,14 @@ public class SocialMediaController {
             
         } catch (NumberFormatException e) {
             ctx.status(400); 
-        } catch (ServiceException e) {
+        } catch (ExceptionSer e) {
             ctx.status(200); 
             ctx.result("");
         }
     }
 
     
-    private void deleteMessageById(Context ctx) {
+    private void dMI(Context ctx) {
         try {
             
             int id = Integer.parseInt(ctx.pathParam("message_id"));
@@ -124,12 +124,12 @@ public class SocialMediaController {
             } else {
                 ctx.status(200);
             }
-        } catch (ServiceException e) {
+        } catch (ExceptionSer e) {
             ctx.status(200);
         }
     }
 
-    private void updateMessageById(Context ctx) throws JsonProcessingException {
+    private void uMI(Context ctx) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         Message mappedMessage = mapper.readValue(ctx.body(), Message.class);
         try {
@@ -140,12 +140,12 @@ public class SocialMediaController {
 
             ctx.json(messageUpdated);
 
-        } catch (ServiceException e) {
+        } catch (ExceptionSer e) {
             ctx.status(400);
         }
     }
 
-    private void getMessagesByAccountId(Context ctx) {
+    private void gMAI(Context ctx) {
         try {
             int accountId = Integer.parseInt(ctx.pathParam("account_id"));
             List<Message> messages = messageService
@@ -156,7 +156,7 @@ public class SocialMediaController {
                 ctx.json(messages);
                 ctx.status(200);
             }
-        } catch (ServiceException e) {
+        } catch (ExceptionSer e) {
             ctx.status(400);
         }
     }

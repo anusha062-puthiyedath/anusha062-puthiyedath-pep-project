@@ -5,7 +5,7 @@ import java.util.Optional;
 
 
 
-public interface BaseDao<T> {
+public interface BD<T> {
     Optional<T> getById(int id);
     List<T> getAll();
     T insert(T t);

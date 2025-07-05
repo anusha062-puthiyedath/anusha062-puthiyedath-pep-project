@@ -6,16 +6,16 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import DAO.AccountDao;
+import DAO.AD;
 import DAO.DaoException;
 import Model.Account;
 
 
 public class AccountService {
-    private AccountDao accountDao;
+    private AD accountDao;
     private static final Logger LOGGER = LoggerFactory.getLogger(AccountService.class);
     public AccountService() {
-        accountDao = new AccountDao();
+        accountDao = new AD();
     }
 
     public Optional<Account> getAccountById(int id) {

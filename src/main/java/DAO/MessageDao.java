@@ -15,7 +15,7 @@ import java.util.Optional;
 import Model.Message;
 import Util.ConnectionUtil;
 
-public class MessageDao implements BaseDao<Message> {
+public class MessageDao implements BD<Message> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageDao.class);
 

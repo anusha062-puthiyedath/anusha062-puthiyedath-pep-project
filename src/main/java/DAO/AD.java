@@ -17,9 +17,9 @@ import java.util.Objects;
 import java.util.Optional;
 
 
-public class AccountDao implements BaseDao<Account> {
+public class AD implements BD<Account> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AccountDao.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AD.class);
 
     
     private void handleSQLException(SQLException e, String sql, String errorMessage) {
