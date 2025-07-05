@@ -25,7 +25,7 @@ public class AccountService {
             LOGGER.info("Fetched account: {}", account.orElse(null));
             return account;
         } catch (DaoException e) {
-            throw new ServiceException("Exception occurred while fetching account", e);
+            throw new ExceptionSer("Exception occurred while fetching account", e);
         }
     }
 
@@ -37,7 +37,7 @@ public class AccountService {
             LOGGER.info("Fetched {} accounts", accounts.size());
             return accounts;
         } catch (DaoException e) {
-            throw new ServiceException("Exception occurred while fetching accounts", e);
+            throw new ExceptionSer("Exception occurred while fetching accounts", e);
         }
     }
 
@@ -48,7 +48,7 @@ public class AccountService {
             LOGGER.info("Found account: {}", account.orElse(null));
             return account;
         } catch (DaoException e) {
-            throw new ServiceException("Exception occurred while finding account by username " + username, e);
+            throw new ExceptionSer("Exception occurred while finding account by username " + username, e);
         }
     }
 
@@ -60,7 +60,7 @@ public class AccountService {
             LOGGER.info("Login validation result: {}", validatedAccount.isPresent());
             return validatedAccount;
         } catch (DaoException e) {
-            throw new ServiceException("Exception occurred while validating login", e);
+            throw new ExceptionSer("Exception occurred while validating login", e);
         }
     }
 
@@ -70,13 +70,13 @@ public class AccountService {
             validateAccount(account);
             Optional<Account> searchedAccount = findAccountByUsername(account.getUsername());
             if (searchedAccount.isPresent()) {
-                throw new ServiceException("Account already exist");
+                throw new ExceptionSer("Account already exist");
             }
             Account createdAccount = accountDao.insert(account);
             LOGGER.info("Created account: {}", createdAccount);
             return createdAccount;
         } catch (DaoException e) {
-            throw new ServiceException("Exception occurred while creating account", e);
+            throw new ExceptionSer("Exception occurred while creating account", e);
         }
     }
 
@@ -88,7 +88,7 @@ public class AccountService {
             LOGGER.info("Updated account: {}. Update successful {}", account, updated);
             return updated;
         } catch (DaoException e) {
-            throw new ServiceException("Exception occurred while while updating account", e);
+            throw new ExceptionSer("Exception occurred while while updating account", e);
         }
     }
 
@@ -102,7 +102,7 @@ public class AccountService {
             LOGGER.info("Deleted account: {} . Deletion successful {}", account, deleted);
             return deleted;
         } catch (DaoException e) {
-            throw new ServiceException("Exception occurred while while deleting account", e);
+            throw new ExceptionSer("Exception occurred while while deleting account", e);
         }
     }
     private void validateAccount(Account account) {
@@ -113,20 +113,20 @@ public class AccountService {
             String password = account.getPassword().trim();
 
             if (username.isEmpty()) {
-                throw new ServiceException("Username cannot be blank");
+                throw new ExceptionSer("Username cannot be blank");
             }
             if (password.isEmpty()) {
-                throw new ServiceException("Password cannot be empty");
+                throw new ExceptionSer("Password cannot be empty");
             }
 
             if (password.length() < 4) {
-                throw new ServiceException("Password must be at least 4 characters long");
+                throw new ExceptionSer("Password must be at least 4 characters long");
             }
             if (accountDao.doesUsernameExist(account.getUsername())) {
-                throw new ServiceException("The username must be unique");
+                throw new ExceptionSer("The username must be unique");
             }
         } catch (DaoException e) {
-            throw new ServiceException("Exception occurred while validating account", e);
+            throw new ExceptionSer("Exception occurred while validating account", e);
         }
     }
 
@@ -138,7 +138,7 @@ public class AccountService {
             LOGGER.info("Account existence: {}", exists);
             return exists;
         } catch (DaoException e) {
-            throw new ServiceException("Exception occurred while checking account existence", e);
+            throw new ExceptionSer("Exception occurred while checking account existence", e);
         }
     }
 }
